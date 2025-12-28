@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+.eggs/
+*.egg-info/
+*.egg
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project-specific
+# Large model files (download in Colab instead)
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# But keep small activation tensors (comment out if needed)
+# data/activations/
+
+# Sensitive
+.env
+*.key
+secrets/
+
+# Experiment outputs that are too large
+# Uncomment if experiments/ gets too big:
+# experiments/*/activations/
