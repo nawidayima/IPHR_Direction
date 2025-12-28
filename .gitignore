@@ -42,4 +42,7 @@ secrets/
 
 # Experiment outputs that are too large
 # Uncomment if experiments/ gets too big:
-experiments/*
+# experiments/*
+
+# But keep trajectory CSVs and small files, ignore large activation tensors
+experiments/*/activations/*.pt
