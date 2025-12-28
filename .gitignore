@@ -42,4 +42,4 @@ secrets/
 
 # Experiment outputs that are too large
 # Uncomment if experiments/ gets too big:
-# experiments/*/activations/
+experiments/*
