@@ -1,0 +1,25 @@
+{
+  "name": "expand_dataset_v1",
+  "description": "Initial expanded dataset across 3 domains",
+  "timestamp": "2025-12-28T20:48:35.000542",
+  "model_name": "meta-llama/Meta-Llama-3-8B-Instruct",
+  "device": "cuda",
+  "domains": [
+    "geography",
+    "dates",
+    "population"
+  ],
+  "max_pairs_per_domain": 50,
+  "max_new_tokens": 300,
+  "temperature": 0.0,
+  "do_sample": false,
+  "layers_to_probe": [
+    8,
+    16,
+    24,
+    31
+  ],
+  "token_position": "last",
+  "random_seed": 42,
+  "notes": "First run with multi-domain data"
+}

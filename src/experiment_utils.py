@@ -1,10 +1,11 @@
 """Experiment tracking utilities for reproducibility and organization.
 
-Each experiment run gets its own folder with:
+Each experiment run is self-contained with:
 - config.json: Hyperparameters, model info, layer selection
 - results.json: Metrics, contradiction rates, accuracy scores
+- trajectories/: Question pairs and model responses (CSVs)
+- activations/: Cached activation tensors
 - plots/: Visualizations
-- notes.md: Manual observations and analysis
 """
 
 import json
@@ -106,6 +107,8 @@ def create_experiment_run(
 
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "plots").mkdir(exist_ok=True)
+    (run_dir / "trajectories").mkdir(exist_ok=True)
+    (run_dir / "activations").mkdir(exist_ok=True)
 
     # Create config if not provided
     if config is None:
@@ -113,10 +116,6 @@ def create_experiment_run(
 
     # Save config
     save_config(run_dir, config)
-
-    # Create empty notes file
-    notes_path = run_dir / "notes.md"
-    notes_path.write_text(f"# Experiment: {name}\n\n## Observations\n\n")
 
     return run_dir
 

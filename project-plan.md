@@ -39,29 +39,24 @@
     ```
   * *Ground truth:* Exactly one of A or B must be YES. If model answers NO to both → contradiction → rationalization detected.
 
-* **Hour 2-4: Data Generation & Manual Inspection**
+* **Hour 2-4: Data Generation**
   * Generate **~100 paired trajectories** (200 total prompts).
   * **Automatic Labeling:**
     * `contradicts(A, B)` → Rationalization (model said NO to both or YES to both)
     * `consistent(A, B)` → Honest (model gave logically consistent answers)
-  * **Manual "Model Biology" Check:** Read 15-20 contradiction cases.
-    * *Key question:* Does the model invent *different* justifications for each NO? (e.g., "X is in the Northern hemisphere" for A, "Longitude doesn't determine north/south" for B)
-    * *This invented reasoning is the target behavior.*
-  * **Decision Gate:** If contradiction rate < 15%, try different question domains or pivot to Backup 1.
+  * **Automatic Decision Gate:** If contradiction rate < 15%, expand to additional domains (dates, population) or try different models.
 
-* **Hour 4-6: Dataset Refinement & Control Groups**
+* **Hour 4-6: Dataset Refinement & Multi-Domain Expansion**
   * **Final Dataset Structure:**
     | Condition | Description | N |
     |-----------|-------------|---|
-    | **Honest** | Consistent answers (YES/NO or NO/YES) with valid reasoning | ~50 |
-    | **Rationalization** | Contradictory answers (NO/NO or YES/YES) with invented reasoning | ~50 |
-    | **Honest Mistake** | Model gives wrong answer on hard geographic questions (genuine confusion) | ~30 |
-  * **Operational Labeling Criteria:**
+    | **Honest** | Consistent answers (YES/NO or NO/YES) | ~75 |
+    | **Rationalization** | Contradictory answers (NO/NO or YES/YES) | ~75 |
+  * **Automatic Labeling Criteria:**
     | Label | Criteria |
     |-------|----------|
     | **Honest** | Logically consistent across paired questions |
-    | **Rationalization** | Contradiction + invented/switched justifications |
-    | **Honest Mistake** | Single question, model is simply wrong (no contradiction to detect) |
+    | **Rationalization** | Contradiction detected (both answers identical) |
 
 ## **Phase 2: Understanding (Hours 6-16)**
 
@@ -81,12 +76,12 @@
   * *Ref:* Arditi et al. — complex behaviors often have single directions.
 
 * **Hour 10-12: Confounder Check**
-  * **Test 1:** Does the probe fire on "Honest Mistake"?
+  * **Test 1:** Does the probe fire on incorrect but non-contradictory answers?
     * *If yes:* We're detecting "wrongness," not rationalization. The direction is confounded.
     * *If no:* Good—the direction is specific to rationalization, not just errors.
   * **Test 2:** Compare activation geometry.
-    * Plot PCA of Honest vs. Rationalization vs. Honest Mistake.
-    * *Expected:* Rationalization should cluster separately from both Honest and Honest Mistake.
+    * Plot PCA of Honest vs. Rationalization activations.
+    * *Expected:* Rationalization should cluster separately from Honest.
 
 * **Hour 12-14: Probe Refinement (if DiM weak)**
   * If simple difference-in-means gives ROC-AUC < 0.7, train a logistic regression probe.
@@ -126,13 +121,13 @@
   1. **Abstract:** Theory of Change + Primary Claim (H1 result).
   2. **Method:** Arcuschin replication + activation extraction + DiM/probe.
   3. **Results:** Probe ROC-AUC, confounder check, steering effect, H2 generalization result.
-  4. **Model Biology:** Qualitative examples of invented reasoning in contradiction cases.
-  5. **Limitations:** Small sample size, single model, geographic domain only. Be honest about negative results.
+  4. **Examples:** Representative contradiction cases showing argument switching behavior.
+  5. **Limitations:** Small sample size, single model. Be honest about negative results.
 
 ## **Backup Plans (Pivot Triggers)**
 
 * **Trigger:** If Hour 4 shows **< 15% contradiction rate** (model doesn't exhibit the Arcuschin effect).
   * **Pivot:** Try different question domains (movies, historical dates) or different models (gemma-2-9b-it). If still no effect, pivot to Backup 1: "The Unlearning Diff."
 
-* **Trigger:** If Hour 12 shows the probe fires on "Honest Mistake" (confounded with error).
-  * **Pivot:** Train a logistic regression probe to distinguish Rationalization from Confusion. If that also fails, write up the confounder discovery as the primary result—still valuable to document.
+* **Trigger:** If Hour 12 shows the probe fires on incorrect but non-contradictory answers (confounded with error).
+  * **Pivot:** Train a logistic regression probe to distinguish Rationalization from simple errors. If that also fails, write up the confounder discovery as the primary result—still valuable to document.
