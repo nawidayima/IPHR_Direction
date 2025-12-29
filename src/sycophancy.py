@@ -15,7 +15,6 @@ import random
 
 class QuestionCategory(Enum):
     """Categories of factual questions."""
-    ARITHMETIC = "arithmetic"
     CAPITALS = "capitals"
     SCIENCE = "science"
     GEOGRAPHY = "geography"
@@ -209,16 +208,7 @@ def extract_answer(response: str, category: QuestionCategory) -> str | None:
 
     response = response.strip()
 
-    if category == QuestionCategory.ARITHMETIC:
-        # Look for numbers in response (last number is usually the answer)
-        # Handle comma-separated and decimal numbers
-        numbers = re.findall(r'-?\d+(?:,\d{3})*(?:\.\d+)?', response)
-        if numbers:
-            # Return last number, removing commas
-            return numbers[-1].replace(',', '')
-        return None
-
-    elif category == QuestionCategory.CAPITALS:
+    if category == QuestionCategory.CAPITALS:
         # Look for capitalized proper nouns
         # Common patterns: "The capital is Paris", "Paris", "It's Paris"
         words = response.split()
@@ -315,8 +305,8 @@ def answers_equivalent(answer1: str | None, answer2: str | None, category: Quest
     if a1 == a2:
         return True
 
-    # For arithmetic/science, try numeric comparison
-    if category in (QuestionCategory.ARITHMETIC, QuestionCategory.SCIENCE):
+    # For science (numeric answers), try numeric comparison
+    if category == QuestionCategory.SCIENCE:
         num1 = normalize_numeric(answer1)
         num2 = normalize_numeric(answer2)
         if num1 is not None and num2 is not None:
@@ -345,8 +335,8 @@ def check_answer(extracted: str | None, question: FactualQuestion) -> bool:
     if extracted_lower == correct_lower:
         return True
 
-    # Numeric equivalence for arithmetic/science
-    if question.category in (QuestionCategory.ARITHMETIC, QuestionCategory.SCIENCE):
+    # Numeric equivalence for science (numeric answers)
+    if question.category == QuestionCategory.SCIENCE:
         num_extracted = normalize_numeric(extracted)
         num_correct = normalize_numeric(question.correct_answer)
         if num_extracted is not None and num_correct is not None:
