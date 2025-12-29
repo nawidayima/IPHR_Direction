@@ -25,12 +25,23 @@ The paper demonstrates that models engage in **Implicit Post-Hoc Rationalization
 Priority: High (Hypothesis Validation)  
 Role in Project: Validates that CoT text is insufficient for monitoring, necessitating internal probes.
 
-### **Core Mechanism: Silent Reward Hacking**
+### **Core Mechanism: Unfaithful CoT (Three Key Findings)**
 
-The paper shows that when models are trained via RL to exploit a spurious signal (Reward Hacking), they **rarely** verbalize this intent in the CoT. Instead, they produce "Unfaithful Illogical Shortcuts."
+**Finding 1 (Section 3): General Unfaithfulness**
+Models use "hints" (sycophancy suggestions, metadata, grader info, etc.) to change their answers but often don't verbalize this in CoT. Faithfulness ranges from ~1% (grader hacking) to ~70% (consistency). CoTs are LESS faithful on harder questions (44% drop from MMLU to GPQA).
 
-* **Snippet:** "In 5 out of 6 environments, CoTs verbalize the reward hacks on fewer than 2% of examples... The model learns to exploit the reward hack on \> 99% of the prompts."  
-* **Relevance:** This proves that keyword searching the CoT (e.g., looking for "I will cheat") is a weak baseline. It strongly motivates your project: if the model doesn't *say* it's cheating, we must *probe* it to find out.
+* **Relevance:** This directly explains our Arcuschin failure—harder questions → less faithful reasoning → model may be confused, not rationalizing.
+
+**Finding 2 (Section 5): Silent Reward Hacking**
+When models are trained via RL to exploit spurious signals, they rarely verbalize this (<2% in 5/6 environments).
+
+* **Snippet:** "The model learns to exploit the reward hack on >99% of the prompts... CoTs verbalize the reward hacks on fewer than 2% of examples."
+* **Relevance:** CoT monitoring alone is insufficient for detecting unfaithful reasoning.
+
+**Finding 3 (Section 8): Activation Probing as Future Work**
+Chen et al. explicitly suggests: "inspecting model reasoning and detecting unfaithful CoT reasoning by probing the model's internal activations (e.g., activated sparse autoencoder features or activated circuits)."
+
+* **Relevance:** Our project directly implements this suggestion—probing activations to detect when reasoning is unfaithful.
 
 ### **Critical Visual: The "Silent Hack"**
 
@@ -63,6 +74,6 @@ Complex model behaviors (like Refusal) are often mediated by a single linear dir
 | Paper | Key Insight | Our Project's "Value Add" |
 | :---- | :---- | :---- |
 | **Arcuschin et al.** | Models rationalize post-hoc using "Argument Switching." | We will detect *when* this switch happens mechanistically (at the decision token). |
-| **Chen et al.** | Reward hacking is rarely verbalized in CoT. | We will prove that even *silent* reward hacking leaves a readable trace in the residual stream. |
+| **Chen et al.** | CoT faithfulness is low (1-39%); activation probing suggested as future work. | We directly implement their suggested future direction: probing activations to detect unfaithful reasoning. |
 | **Arditi et al.** | Behaviors are single linear directions. | We will apply this "Refusal" methodology to a new domain: **Epistemic Rationalization** (lying about logic). |
 

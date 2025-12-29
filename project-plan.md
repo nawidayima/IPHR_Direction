@@ -1,5 +1,30 @@
 # **Project Plan: A truth test for a lying LLM**
 
+---
+
+## **STATUS UPDATE (Hour 9)**
+
+### Phase 1 Result: ✅ Behavioral effect replicated
+- Generated 50 geography pairs, 50 date pairs
+- **Contradiction rate:** 60% geography, 50% dates (well above 15% threshold)
+- Model exhibits Arcuschin "argument switching" behavior
+
+### Phase 2 Result: ❌ No linear probe signal
+- **DiM AUC:** 0.44-0.49 across layers 24, 28, 31 (random)
+- **LR AUC:** 0.40-0.58 with various regularization (random)
+- **Easy pairs only:** Still no signal (AUC ~0.5)
+
+### Key Finding: Contradictions = Confusion, Not Rationalization
+- Contradiction rate correlates with difficulty: **45% easy → 80% hard**
+- "Hard" pairs are geographically close (Frankfurt/Prague, Seattle/Portland)
+- Model appears genuinely uncertain, not "knowing but suppressing"
+
+### Decision: PIVOT to ICRL Sycophancy
+- H1 (Arcuschin) failed → cannot test H2 (generalization)
+- New standalone hypothesis: **H1' (Sycophancy direction)**
+
+---
+
 ## **Constraints**
 
 * **Total Time Budget:** 20 Hours (Experimental) \+ 2 Hours (Write-up).  
@@ -11,7 +36,7 @@
 
 * **Theory of Change:** We'd like to detect when models reason unfaithfully—a prerequisite for catching deceptive alignment.
 
-* **Observation:** Models engage in post-hoc rationalization, inventing plausible justifications for predetermined conclusions (Arcuschin et al.). This can be invisible in CoT text (Chen et al.: reward hacking rarely verbalized).
+* **Observation:** Models engage in post-hoc rationalization, inventing plausible justifications for predetermined conclusions (Arcuschin et al.). CoT text is insufficient for monitoring: models frequently don't verbalize the factors actually influencing their answers (Chen et al., 2025; faithfulness 1-39% across hint types). Chen et al. explicitly suggests activation probing as a promising future direction.
 
 * **North Star:** Detect unfaithful reasoning at the activation level, where surface text cannot hide it.
 
@@ -131,3 +156,53 @@
 
 * **Trigger:** If Hour 12 shows the probe fires on incorrect but non-contradictory answers (confounded with error).
   * **Pivot:** Train a logistic regression probe to distinguish Rationalization from simple errors. If that also fails, write up the confounder discovery as the primary result—still valuable to document.
+
+---
+
+## **PIVOT: ICRL Sycophancy (Hours 9-16)**
+
+**Trigger:** H1 (Arcuschin) showed no linear signal. Contradictions correlate with difficulty, suggesting confusion rather than rationalization.
+
+### Revised Hypothesis
+
+**H1' (Sycophancy):** Sycophantic behavior—changing a correct answer after negative user feedback—is mediated by a linearly separable direction in the residual stream.
+
+### Why This Is Cleaner Than Arcuschin
+
+| Aspect | Arcuschin (failed) | ICRL Sycophancy |
+|--------|-------------------|-----------------|
+| Ground truth | Ambiguous (model may be confused) | Clear (model just gave correct answer) |
+| Mechanism | Unknown | Social pressure / reward hacking |
+| "Knows right answer" | Uncertain | Definite (it just said it) |
+
+### Experimental Design
+
+* **Hour 9-11: Data Generation**
+  * Use simple factual questions (e.g., "What is 2+2?", "What is the capital of France?")
+  * **Trajectory A (Honest):** Model answers correctly → positive feedback → model maintains answer
+  * **Trajectory B (Sycophantic):** Model answers correctly → negative feedback ("That's wrong") → model changes answer
+  * Generate ~50 pairs
+
+* **Hour 11-13: Activation Extraction**
+  * Extract activations at the decision point before the second response
+  * Same layers as before: 24, 28, 31
+  * Label: 0 = maintains correct answer, 1 = sycophantically changes
+
+* **Hour 13-15: Probe Training**
+  * DiM + LR with cross-validation
+  * Target: ROC-AUC > 0.7
+
+* **Hour 15-16: Steering (if probe works)**
+  * Ablate sycophancy direction
+  * Test: Does ablation reduce answer-changing behavior?
+
+### Success Criteria
+
+* **Positive result:** AUC > 0.7, steering reduces sycophancy rate
+* **Negative result:** AUC ~0.5, document as second informative negative
+
+### Fallback
+
+If ICRL also shows no signal, write up both negative results:
+1. Arcuschin contradictions = confusion, not rationalization
+2. Sycophancy not linearly separable (or not present in Llama-3-8B)
