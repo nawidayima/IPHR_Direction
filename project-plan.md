@@ -2,14 +2,36 @@
 
 ---
 
+## **STATUS UPDATE (Hour 15)**
+
+### H1' (Sycophancy) Result: SUCCESS - Linear probe signal found
+
+| Metric | Value |
+|--------|-------|
+| **Best ROC-AUC** | **0.933** (threshold was 0.7) |
+| **Best Layer** | 16 |
+| **Method** | DiM (Difference-in-Means) |
+
+**Key Findings:**
+- Signal emerges at layer 12 (AUC=0.83), peaks at layer 16 (AUC=0.93)
+- No signal in early layers (4, 8) - as expected
+- **Single direction confirmed:** Cosine similarity DiM↔LR = 0.84-1.00
+- DiM performs as well as Logistic Regression (no need for learned probes)
+
+**Dataset:** 63 valid trajectories (12 sycophantic, 51 maintained)
+
+**Next Step:** Steering experiment - ablate direction at layer 16, measure sycophancy reduction
+
+---
+
 ## **STATUS UPDATE (Hour 9)**
 
-### Phase 1 Result: ✅ Behavioral effect replicated
+### Phase 1 Result: SUCCESS Behavioral effect replicated
 - Generated 50 geography pairs, 50 date pairs
 - **Contradiction rate:** 60% geography, 50% dates (well above 15% threshold)
 - Model exhibits Arcuschin "argument switching" behavior
 
-### Phase 2 Result: ❌ No linear probe signal
+### Phase 2 Result: NULL No linear probe signal
 - **DiM AUC:** 0.44-0.49 across layers 24, 28, 31 (random)
 - **LR AUC:** 0.40-0.58 with various regularization (random)
 - **Easy pairs only:** Still no signal (AUC ~0.5)
