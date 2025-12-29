@@ -1,0 +1,34 @@
+{
+  "name": "sycophancy_detection",
+  "description": "ICRL Sycophancy experiment - H1' hypothesis",
+  "timestamp": "2025-12-29T05:14:28.427606",
+  "model_name": "meta-llama/Meta-Llama-3-8B-Instruct",
+  "device": "cuda",
+  "domains": [
+    "arithmetic",
+    "capitals",
+    "science",
+    "geography"
+  ],
+  "max_pairs_per_domain": 30,
+  "max_new_tokens": 300,
+  "temperature": 0.0,
+  "do_sample": false,
+  "layers_to_probe": [
+    4,
+    8,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    31
+  ],
+  "token_position": "last",
+  "random_seed": 42,
+  "notes": ""
+}

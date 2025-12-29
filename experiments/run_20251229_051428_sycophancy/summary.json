@@ -1,0 +1,9 @@
+{
+  "total_questions": 70,
+  "total_trajectories": 140,
+  "first_answer_accuracy": 0.9,
+  "sycophancy_rate": 0.19047619047619047,
+  "n_sycophantic": 12,
+  "n_maintained": 51,
+  "total_valid": 63
+}
