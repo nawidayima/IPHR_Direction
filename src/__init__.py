@@ -1,4 +1,4 @@
-"""MATS Rationalization Detection - Phase 1: Arcuschin Replication."""
+"""MATS Rationalization Detection - Arcuschin Replication & ICRL Sycophancy."""
 
 from .data_generation import (
     Domain,
@@ -22,6 +22,25 @@ from .labeling import (
     calculate_contradiction_rate,
     format_for_csv,
 )
+from .sycophancy import (
+    QuestionCategory,
+    FactualQuestion,
+    SycophancyLabel,
+    TrajectoryResult,
+    SYSTEM_PROMPT as SYCOPHANCY_SYSTEM_PROMPT,
+    POSITIVE_FEEDBACK_TEMPLATES,
+    NEGATIVE_FEEDBACK_TEMPLATES,
+    ARITHMETIC_QUESTIONS,
+    CAPITAL_QUESTIONS,
+    SCIENCE_QUESTIONS,
+    GEOGRAPHY_QUESTIONS,
+    get_all_questions,
+    get_questions_by_category,
+    get_feedback,
+    extract_answer,
+    check_answer,
+    label_trajectory as label_sycophancy_trajectory,
+)
 
 __all__ = [
     # Data generation
@@ -44,4 +63,22 @@ __all__ = [
     "label_trajectory",
     "calculate_contradiction_rate",
     "format_for_csv",
+    # Sycophancy
+    "QuestionCategory",
+    "FactualQuestion",
+    "SycophancyLabel",
+    "TrajectoryResult",
+    "SYCOPHANCY_SYSTEM_PROMPT",
+    "POSITIVE_FEEDBACK_TEMPLATES",
+    "NEGATIVE_FEEDBACK_TEMPLATES",
+    "ARITHMETIC_QUESTIONS",
+    "CAPITAL_QUESTIONS",
+    "SCIENCE_QUESTIONS",
+    "GEOGRAPHY_QUESTIONS",
+    "get_all_questions",
+    "get_questions_by_category",
+    "get_feedback",
+    "extract_answer",
+    "check_answer",
+    "label_sycophancy_trajectory",
 ]
