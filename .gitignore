@@ -46,3 +46,4 @@ secrets/
 
 # But keep trajectory CSVs and small files, ignore large activation tensors
 #experiments/*/activations/*.pt
+MATS_*
